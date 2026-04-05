@@ -72,7 +72,7 @@ On `pull_request` (`opened`, `synchronize`, `reopened`), [Claude Code Action](ht
 | `.env` not committed | Done in repo | `.env` is in [`.gitignore`](.gitignore); never `git add .env`. |
 | Pin Claude Code Action | Done in repo | Workflow uses commit SHA for `v1` (see YAML); bump SHA when upgrading. |
 | Commit and push to GitHub | **You** | `git add` / `git commit` / `git push` (remote `origin` must exist). |
-| Add `ANTHROPIC_API_KEY` secret | **You** (when ready) | Repo **Settings → Secrets and variables → Actions**. Until then the workflow **skips** the review job—no failure. |
+| Add `ANTHROPIC_API_KEY` secret | **You** (when ready) | Repo **Settings → Secrets and variables → Actions**. Until then checkout + Claude **steps** are skipped—run still succeeds. |
 | Enable Actions | **You** | Repo **Settings → Actions → General** if previously disabled. |
 | Smoke-test with a PR | **You** | Open any PR from a branch on this repo; check **Actions** tab and one bot comment on the PR. |
 | Branch protection (optional) | **You** | Protect `main`; keep this workflow **non-required** if you do not want failed runs to block merge. |
@@ -80,7 +80,7 @@ On `pull_request` (`opened`, `synchronize`, `reopened`), [Claude Code Action](ht
 
 ### Notes
 
-- **No API key yet:** If **`ANTHROPIC_API_KEY`** is not set in repo secrets, the review job is **skipped** (workflow does not fail). Add the secret when you have a key; the next PR will run the review.
+- **No API key yet:** If **`ANTHROPIC_API_KEY`** is not set, **checkout and Claude steps are skipped** (GitHub does not allow `secrets` in job-level `if`). The run still **succeeds**. Add the secret when you have a key.
 - **Fork PRs** are skipped (secrets are not available to workflows from forks).
 - **Branch protection:** Leave this workflow **non-required** if you never want a failed review run to block merges; merging stays a human decision either way.
 - **Cost:** Anthropic API usage applies per run; cancel-in-progress is enabled per PR to reduce duplicate runs.

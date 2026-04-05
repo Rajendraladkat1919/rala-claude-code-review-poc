@@ -1,5 +1,5 @@
 # Advisory Claude review: one top-level PR comment. Humans approve and merge.
-# Requires repo secret: ANTHROPIC_API_KEY (job is skipped if unset — no failed run)
+# Requires repo secret: ANTHROPIC_API_KEY (checkout + Claude steps skip if unset — job still succeeds)
 # Install https://github.com/apps/claude if you use Anthropic’s guided setup.
 # Review rules: see REVIEW.md (canonical). Prompt below mirrors key areas for CI.
 
@@ -15,8 +15,8 @@ concurrency:
 
 jobs:
   review:
-    # Skip: fork PRs (no secrets), or same-repo PRs when API key is not configured yet.
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository && secrets.ANTHROPIC_API_KEY != '' }}
+    # Fork PRs only at job level — `secrets` is not allowed in job `if` on GitHub.
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -25,12 +25,14 @@ jobs:
       actions: read
     steps:
       - name: Checkout
+        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       # Pinned to v1 tag SHA for reproducible CI (bump when upgrading).
       - name: Claude review (single PR comment)
+        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
         uses: anthropics/claude-code-action@d3a8d1736a61af74bee88bcac0182c49be969839
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
