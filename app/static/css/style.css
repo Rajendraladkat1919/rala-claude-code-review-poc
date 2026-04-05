@@ -1,0 +1,147 @@
+:root {
+  --bg: #0f1419;
+  --surface: #1a2332;
+  --text: #e7ecf3;
+  --muted: #8b9cb3;
+  --accent: #3d9cf0;
+  --accent-dim: #2a6fa8;
+  --error: #f07178;
+  --radius: 12px;
+  --font: "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  background: radial-gradient(1200px 600px at 10% 0%, #1a2a3d 0%, var(--bg) 55%);
+  color: var(--text);
+}
+
+.site-header {
+  padding: 1.5rem 1.25rem 0.5rem;
+  text-align: center;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.site-header a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.site-header a:hover {
+  color: var(--accent);
+}
+
+.tagline {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.container {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 2rem;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.35rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.city-form label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.city-form select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.city-form button {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(160deg, var(--accent), var(--accent-dim));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.city-form button:hover {
+  filter: brightness(1.08);
+}
+
+.weather-stats {
+  margin: 0;
+  display: grid;
+  gap: 0.5rem 1rem;
+}
+
+.weather-stats dt {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.weather-stats dd {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.weather-stats dd.temp {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.flash-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.flash {
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.flash-error {
+  background: rgba(240, 113, 120, 0.15);
+  color: var(--error);
+  border: 1px solid rgba(240, 113, 120, 0.35);
+}

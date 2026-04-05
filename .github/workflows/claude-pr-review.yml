@@ -1,0 +1,72 @@
+# Advisory Claude review: one top-level PR comment. Humans approve and merge.
+# Requires repo secret: ANTHROPIC_API_KEY (job is skipped if unset — no failed run)
+# Install https://github.com/apps/claude if you use Anthropic’s guided setup.
+# Review rules: see REVIEW.md (canonical). Prompt below mirrors key areas for CI.
+
+name: Claude PR review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: claude-pr-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # Skip: fork PRs (no secrets), or same-repo PRs when API key is not configured yet.
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository && secrets.ANTHROPIC_API_KEY != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Pinned to v1 tag SHA for reproducible CI (bump when upgrading).
+      - name: Claude review (single PR comment)
+        uses: anthropics/claude-code-action@d3a8d1736a61af74bee88bcac0182c49be969839
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            You are an automated reviewer for this repository (Python / Flask).
+
+            ## Policy source
+            1. Read the file `REVIEW.md` at the repository root with your Read tool and apply **all** sections as the primary review policy.
+            2. Also apply the condensed checklist below (it should align with `REVIEW.md`; if anything conflicts, follow `REVIEW.md`).
+
+            ## Condensed checklist (Python / Flask)
+            - **Correctness:** logic, edge cases, error paths.
+            - **Security:** no committed secrets; CSRF on state-changing forms; safe sessions/cookies for production patterns; injection (SQL, XSS, unsafe Jinja); no debug defaults in production config.
+            - **Flask structure:** application factory, blueprints, thin routes, config via config objects, extensions registered in one place.
+            - **Python quality:** no bare `except`, logging vs print, type hints where helpful, no mutable default arguments, focused functions.
+            - **Tests & docs:** update `tests/` for meaningful behavior changes; touch README when user-visible behavior changes.
+            - **Dependencies:** justify and pin new packages in `requirements.txt`.
+
+            ## Severity
+            Label each finding **High**, **Medium**, or **Low** per the rubric in `REVIEW.md`. Say if unclear.
+
+            ## How to inspect
+            The PR branch is checked out in the working directory. Use `gh pr diff` and `gh pr view` as needed, and Read files (including `REVIEW.md` and changed Python/templates) when helpful.
+
+            ## Output policy (strict)
+            - Post exactly ONE top-level PR comment with your entire review using `gh pr comment` and the PR number above (e.g. `gh pr comment ${{ github.event.pull_request.number }} --body-file ...` or `--body "..."`). Use GitHub-flavored Markdown.
+            - Do NOT create inline review comments or line-level PR review APIs.
+            - Do NOT approve, request changes, or merge the PR. A human merges after reading your comment.
+
+            Structure the comment as:
+            ## Summary
+            ## Findings (High / Medium / Low)
+            ## Suggested follow-ups
+
+          claude_args: |
+            --allowedTools "Read,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"

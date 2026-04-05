@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Select city · India Weather{% endblock %}
+{% block body %}
+  <section class="card">
+    <h2>Choose a city</h2>
+    <form method="post" action="{{ url_for('weather.index') }}" class="city-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <label for="city">City (India)</label>
+      <select name="city" id="city" required>
+        <option value="" disabled {% if not selected_city %}selected{% endif %}>
+          — Select —
+        </option>
+        {% for c in cities %}
+          <option
+            value="{{ c.id }}"
+            {% if selected_city == c.id %}selected{% endif %}
+          >
+            {{ c.name }}
+          </option>
+        {% endfor %}
+      </select>
+      <button type="submit">Show weather</button>
+    </form>
+  </section>
+
+  {% if result %}
+    <section class="card result">
+      <h2>{{ result.city_name }}</h2>
+      <dl class="weather-stats">
+        <dt>Date &amp; time (IST)</dt>
+        <dd>{{ result.local_datetime.strftime("%d %b %Y, %I:%M %p") }}</dd>
+        <dt>Temperature</dt>
+        <dd class="temp">{{ "%.1f"|format(result.temperature_c) }}°C</dd>
+        <dt>Conditions</dt>
+        <dd>{{ result.conditions }}</dd>
+      </dl>
+    </section>
+  {% endif %}
+{% endblock %}

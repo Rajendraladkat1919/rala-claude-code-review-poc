@@ -1,0 +1,10 @@
+[project]
+name = "india-weather-poc"
+version = "0.1.0"
+description = "Flask POC — India city weather (mock data)"
+requires-python = ">=3.10"
+readme = "README.md"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
