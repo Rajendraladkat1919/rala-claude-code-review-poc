@@ -18,6 +18,8 @@ jobs:
     # Fork PRs only at job level — `secrets` is not allowed in job `if` on GitHub.
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     permissions:
       contents: read
       pull-requests: write
@@ -25,14 +27,14 @@ jobs:
       actions: read
     steps:
       - name: Checkout
-        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        if: env.ANTHROPIC_API_KEY != ''
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       # Pinned to v1 tag SHA for reproducible CI (bump when upgrading).
       - name: Claude review (single PR comment)
-        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        if: env.ANTHROPIC_API_KEY != ''
         uses: anthropics/claude-code-action@d3a8d1736a61af74bee88bcac0182c49be969839
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
