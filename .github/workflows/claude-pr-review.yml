@@ -45,8 +45,13 @@ jobs:
             You are an automated reviewer for this repository (Python / Flask).
 
             ## Policy source
-            1. Read the file `REVIEW.md` at the repository root with your Read tool and apply **all** sections as the primary review policy.
-            2. Also apply the condensed checklist below (it should align with `REVIEW.md`; if anything conflicts, follow `REVIEW.md`).
+            Read all four policy files using your Read tool before reviewing:
+            1. `REVIEW.md` — universal checks, severity rubric, output shape (always apply)
+            2. `REVIEW-languages.md` — Python, JS/TS, Java/Kotlin, Go, Ruby/Rails, Rust
+            3. `REVIEW-infra.md` — Terraform, Docker, Kubernetes, Helm, Ansible, CI/CD, Cloud
+            4. `REVIEW-data.md` — Databases/Migrations, API Design
+
+            Apply only the sections relevant to the files changed in this PR. If anything in the files below conflicts with the policy files, the policy files win.
 
             ## Condensed checklist (Python / Flask)
             - **Correctness:** logic, edge cases, error paths.
