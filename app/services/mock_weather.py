@@ -50,3 +50,4 @@ class MockWeatherProvider:
             conditions=str(row["conditions"]),
             local_datetime=datetime.now(IST),
         )
+
